@@ -1,16 +1,17 @@
-#
-# Build stage
-#
+# Utiliza la imagen base de Gradle con el JDK adecuado
 FROM gradle:latest AS build
+
+# Copia el proyecto en el contenedor
 COPY --chown=gradle:gradle . /home/gradle/src
+
+# Establece el directorio de trabajo
 WORKDIR /home/gradle/src
+
+# Limpia el proyecto (opcional)
 RUN gradle clean
-RUN gradle bootJar
-#
-# Package stage
-#
-FROM eclipse-temurin:17-jdk-jammy
-ARG JAR_FILE=build/libs/*.jar
-COPY --from=build /home/gradle/src/build/libs/*.jar app.jar
+
+# Define el puerto que quieres exponer
 EXPOSE ${PORT}
-ENTRYPOINT ["java","-jar","/app.jar"]
+
+# Ejecuta la aplicación usando Gradle
+ENTRYPOINT ["gradle", "bootRun"]
