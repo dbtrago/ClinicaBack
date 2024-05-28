@@ -4,8 +4,11 @@
 FROM gradle:latest AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN gradle clean
-RUN gradle bootJar
+
+# Ejecutar comandos de gradle con opciones detalladas
+RUN gradle clean --no-daemon --stacktrace --info
+RUN gradle bootJar --no-daemon --stacktrace --info
+
 #
 # Package stage
 #
